@@ -1,50 +1,57 @@
-
 {% extends 'base.html.twig' %}
 
 {% block title %}Register{% endblock %}
 
 {% block body %}
-    <section class="section">
-      <div class="container">
-        <h1 class="title">Register</h1>
+<section class="section">
+  <div class="container" style="max-width: 500px;">
+    <h1 class="title has-text-centered">Регистрация</h1>
 
+    {% if form_errors(registrationForm) %}
+      <div class="notification is-danger">
         {{ form_errors(registrationForm) }}
-
-        {{ form_start(registrationForm, {'attr': {'class': 'box'}}) }}
-            <div class="field">
-                {{ form_label(registrationForm.username, null, {'label_attr': {'class': 'label'}}) }}
-                <div class="control">
-                    {{ form_widget(registrationForm.username, {'attr': {'class': 'input'}}) }}
-                </div>
-                {{ form_errors(registrationForm.username) }}
-            </div>
-
-            <div class="field">
-                {{ form_label(registrationForm.plainPassword, 'Password', {'label_attr': {'class': 'label'}}) }}
-                <div class="control">
-                    {{ form_widget(registrationForm.plainPassword, {'attr': {'class': 'input'}}) }}
-                </div>
-                {{ form_errors(registrationForm.plainPassword) }}
-            </div>
-
-            <div class="field">
-                <div class="control">
-                    <label class="checkbox">
-                        {{ form_widget(registrationForm.agreeTerms, {'attr': {'class': 'checkbox'}}) }}
-                        I agree to the terms
-                    </label>
-                </div>
-                {{ form_errors(registrationForm.agreeTerms) }}
-            </div>
-
-            <div class="field">
-                <div class="control">
-                    <button type="submit" class="button is-primary">Register</button>
-                </div>
-            </div>
-
-        {{ form_end(registrationForm) }}
       </div>
-    </section>
-{% endblock %}
+    {% endif %}
 
+    {{ form_start(registrationForm, {'attr': {'class': 'box'}}) }}
+
+      <div class="field">
+        {{ form_label(registrationForm.username, 'Имя пользователя', {'label_attr': {'class': 'label'}}) }}
+        <div class="control">
+          {{ form_widget(registrationForm.username, {'attr': {'class': 'input'}}) }}
+        </div>
+        {{ form_errors(registrationForm.username) }}
+      </div>
+
+      <div class="field">
+        {{ form_label(registrationForm.plainPassword, 'Пароль', {'label_attr': {'class': 'label'}}) }}
+        <div class="control">
+          {{ form_widget(registrationForm.plainPassword, {'attr': {'class': 'input'}}) }}
+        </div>
+        {{ form_errors(registrationForm.plainPassword) }}
+      </div>
+
+      <div class="field">
+        <div class="control">
+          <label class="checkbox">
+            {{ form_widget(registrationForm.agreeTerms) }}
+            Я согласен с правилами
+            </label>
+        </div>
+        {{ form_errors(registrationForm.agreeTerms) }}
+      </div>
+
+      <div class="field is-grouped is-grouped-right">
+        <div class="control">
+          <button type="submit" class="button is-link">Зарегистрироваться</button>
+        </div>
+      </div>
+
+    {{ form_end(registrationForm) }}
+
+    <p class="has-text-centered mt-4">
+      Уже есть аккаунт? <a href="{{ path('app_login') }}">Войти</a>
+    </p>
+  </div>
+</section>
+{% endblock %}

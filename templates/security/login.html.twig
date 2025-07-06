@@ -1,0 +1,54 @@
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Log in!{% endblock %}
+
+{% block body %}
+<section class="section">
+  <div class="container" style="max-width: 500px;">
+    {% if error %}
+      <div class="notification is-danger">
+        {{ error.messageKey|trans(error.messageData, 'security') }}
+      </div>
+    {% endif %}
+
+    {% if app.user %}
+      <div class="notification is-info">
+        You are logged in as {{ app.user.userIdentifier }},
+        <a href="{{ path('app_logout') }}">Logout</a>
+      </div>
+    {% endif %}
+
+    <h1 class="title has-text-centered">Пожалуйста,войдите в ваш аккаунт </h1>
+
+    <form method="post" class="box">
+      <div class="field">
+        <label class="label" for="username">Имя пользователя</label>
+        <div class="control">
+          <input class="input" type="text" id="username" name="_username" value="{{ last_username }}" autocomplete="username" required autofocus>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label" for="password">Пароль</label>
+        <div class="control">
+          <input class="input" type="password" id="password" name="_password" autocomplete="current-password" required>
+        </div>
+      </div>
+
+      <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+      <div class="field is-grouped is-grouped-right">
+        <div class="control">
+          <button class="button is-primary" type="submit">Войти</button>
+        </div>
+      </div>
+    </form>
+
+    <p class="has-text-centered mt-4">
+     Нет аккаунта? <a href="{{ path('app_register') }}">Регистрация</a>
+    </p>
+  </div>
+</section>
+{% endblock %}
+
