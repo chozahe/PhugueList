@@ -4,15 +4,15 @@ namespace App\Service;
 
 use App\Dto\TaskFormDto;
 use App\Entity\User;
-use Doctrine\ORM\EntityManager;
 use App\Enum\TaskStatus;
 use App\Entity\Task;
+use Doctrine\ORM\EntityManagerInterface;
 
 class TaskService
 {
-    private EntityManager $entityManager;
+    private EntityManagerInterface $entityManager;
 
-    public function __construct(EntityManager $entityManager)
+    public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
     }

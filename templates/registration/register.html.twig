@@ -4,52 +4,61 @@
 
 {% block body %}
 <section class="section">
-  <div class="container" style="max-width: 500px;">
-    <h1 class="title has-text-centered">Регистрация</h1>
-
-    {% if form_errors(registrationForm) %}
-      <div class="notification is-danger">
-        {{ form_errors(registrationForm) }}
-      </div>
-    {% endif %}
+  <div class="container is-max-desktop">
+    <h1 class="title has-text-centered mb-5">Регистрация</h1>
 
     {{ form_start(registrationForm, {'attr': {'class': 'box'}}) }}
 
-      <div class="field">
+      {# Username #}
+      <div class="field mb-5">
         {{ form_label(registrationForm.username, 'Имя пользователя', {'label_attr': {'class': 'label'}}) }}
         <div class="control">
           {{ form_widget(registrationForm.username, {'attr': {'class': 'input'}}) }}
         </div>
-        {{ form_errors(registrationForm.username) }}
+        {% for error in registrationForm.username.vars.errors %}
+          <div class="mt-2">
+            <span class="tag is-danger is-medium">{{ error.message }}</span>
+          </div>
+        {% endfor %}
       </div>
 
-      <div class="field">
+      {# Password #}
+      <div class="field mb-5">
         {{ form_label(registrationForm.plainPassword, 'Пароль', {'label_attr': {'class': 'label'}}) }}
         <div class="control">
           {{ form_widget(registrationForm.plainPassword, {'attr': {'class': 'input'}}) }}
         </div>
-        {{ form_errors(registrationForm.plainPassword) }}
+        {% for error in registrationForm.plainPassword.vars.errors %}
+          <div class="mt-2">
+            <span class="tag is-danger is-medium">{{ error.message }}</span>
+          </div>
+        {% endfor %}
       </div>
 
-      <div class="field">
+      {# Agree to terms #}
+      <div class="field mb-5">
         <div class="control">
           <label class="checkbox">
             {{ form_widget(registrationForm.agreeTerms) }}
             Я согласен с правилами
-            </label>
+          </label>
         </div>
-        {{ form_errors(registrationForm.agreeTerms) }}
+        {% for error in registrationForm.agreeTerms.vars.errors %}
+          <div class="mt-2">
+            <span class="tag is-danger is-medium">{{ error.message }}</span>
+          </div>
+        {% endfor %}
       </div>
 
       <div class="field is-grouped is-grouped-right">
         <div class="control">
-          <button type="submit" class="button is-link">Зарегистрироваться</button>
+          <button type="submit" class="button is-primary is-medium">Зарегистрироваться</button>
         </div>
       </div>
 
     {{ form_end(registrationForm) }}
 
-    <p class="has-text-centered mt-4">
+    <p class="has-text-centered mt-5">
       Уже есть аккаунт? <a href="{{ path('app_login') }}">Войти</a>
     </p>
   </div>
