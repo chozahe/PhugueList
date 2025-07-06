@@ -1,19 +1,50 @@
+
 {% extends 'base.html.twig' %}
 
 {% block title %}Register{% endblock %}
 
 {% block body %}
-    <h1>Register</h1>
+    <section class="section">
+      <div class="container">
+        <h1 class="title">Register</h1>
 
-    {{ form_errors(registrationForm) }}
+        {{ form_errors(registrationForm) }}
 
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.username) }}
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-        {{ form_row(registrationForm.agreeTerms) }}
+        {{ form_start(registrationForm, {'attr': {'class': 'box'}}) }}
+            <div class="field">
+                {{ form_label(registrationForm.username, null, {'label_attr': {'class': 'label'}}) }}
+                <div class="control">
+                    {{ form_widget(registrationForm.username, {'attr': {'class': 'input'}}) }}
+                </div>
+                {{ form_errors(registrationForm.username) }}
+            </div>
 
-        <button type="submit" class="btn">Register</button>
-    {{ form_end(registrationForm) }}
+            <div class="field">
+                {{ form_label(registrationForm.plainPassword, 'Password', {'label_attr': {'class': 'label'}}) }}
+                <div class="control">
+                    {{ form_widget(registrationForm.plainPassword, {'attr': {'class': 'input'}}) }}
+                </div>
+                {{ form_errors(registrationForm.plainPassword) }}
+            </div>
+
+            <div class="field">
+                <div class="control">
+                    <label class="checkbox">
+                        {{ form_widget(registrationForm.agreeTerms, {'attr': {'class': 'checkbox'}}) }}
+                        I agree to the terms
+                    </label>
+                </div>
+                {{ form_errors(registrationForm.agreeTerms) }}
+            </div>
+
+            <div class="field">
+                <div class="control">
+                    <button type="submit" class="button is-primary">Register</button>
+                </div>
+            </div>
+
+        {{ form_end(registrationForm) }}
+      </div>
+    </section>
 {% endblock %}
+
