@@ -1,3 +1,11 @@
 _security_logout:
     resource: security.route_loader.logout
     type: service
+
+app_home:
+    path: /
+    controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController::urlRedirectAction
+    defaults:
+        path: /tasks
+        permanent: true
+    methods: [GET]

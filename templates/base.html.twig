@@ -1,16 +1,94 @@
+{% set is_authenticated = is_granted('IS_AUTHENTICATED_FULLY') %}
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-        {% block stylesheets %}
-            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
-        {% endblock %}
-        {% block javascripts %}
-        {% endblock %}
-    </head>
-    <body>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Task Manager{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    {% block stylesheets %}
+    {% endblock %}
+</head>
+<body class="has-background-black">
+    <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+            <a class="navbar-item has-text-light has-text-weight-bold" href="/">
+                <span class="icon-text">
+                    <span class="icon has-text-primary">
+                        <i class="fas fa-tasks"></i>
+                    </span>
+                    <span>Task Manager</span>
+                </span>
+            </a>
+            <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarMenu">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
+        </div>
+
+        <div id="navbarMenu" class="navbar-menu has-background-dark">
+            <div class="navbar-start">
+                <a class="navbar-item has-text-light" href="{{ path('task_create') }}">
+                    Создать задачу
+                </a>
+                {% if is_authenticated %}
+                    <a class="navbar-item has-text-light" href="{{ path('task_list') }}">
+                        Мои задачи
+                    </a>
+                {% endif %}
+            </div>
+
+            <div class="navbar-end">
+                {% if is_authenticated %}
+                    <div class="navbar-item">
+                        <div class="buttons">
+                            <a class="button is-primary is-rounded" href="{{ path('app_logout') }}">
+                                <span class="icon">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                </span>
+                                <span>Выйти</span>
+                            </a>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="navbar-item">
+                        <div class="buttons">
+                            <a class="button is-primary is-rounded" href="{{ path('app_login') }}">
+                                <span class="icon">
+                                    <i class="fas fa-sign-in-alt"></i>
+                                </span>
+                                <span>Войти</span>
+                            </a>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <main>
         {% block body %}{% endblock %}
-    </body>
+    </main>
+
+    {% block javascripts %}
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                // Burger menu toggle для мобильных устройств
+                const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+                if ($navbarBurgers.length > 0) {
+                    $navbarBurgers.forEach(el => {
+                        el.addEventListener('click', () => {
+                            const target = el.dataset.target;
+                            const $target = document.getElementById(target);
+                            el.classList.toggle('is-active');
+                            $target.classList.toggle('is-active');
+                        });
+                    });
+                }
+            });
+        </script>
+    {% endblock %}
+</body>
 </html>
