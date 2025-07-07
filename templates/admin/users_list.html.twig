@@ -25,7 +25,7 @@
                     <span class="icon has-text-primary">
                       <i class="fas fa-user"></i>
                     </span>
-                    <span>{{ user.email }}</span>
+                    <span>{{ user.username }}</span>
                   </span>
                 </p>
                 <div class="card-header-icon">
@@ -51,29 +51,10 @@
                       </span>
                     </p>
                     <p class="has-text-light">ID: {{ user.id }}</p>
-                    <p class="has-text-light">Email: {{ user.email }}</p>
+                    <p class="has-text-light">Username: {{ user.username }}</p>
                   </div>
 
                   <div class="columns is-mobile is-gapless">
-                    <div class="column">
-                      <div class="notification has-background-grey-darker has-text-light is-small">
-                        <p class="is-size-7 has-text-grey-light mb-1">
-                          <span class="icon-text">
-                            <span class="icon is-small has-text-info">
-                              <i class="fas fa-calendar-plus"></i>
-                            </span>
-                            <span class="has-text-weight-semibold">Регистрация:</span>
-                          </span>
-                        </p>
-                        <p class="has-text-weight-medium has-text-light">
-                          {% if user.createdAt %}
-                            {{ user.createdAt|date('Y-m-d H:i') }}
-                          {% else %}
-                            Не указано
-                          {% endif %}
-                        </p>
-                      </div>
-                    </div>
                     <div class="column">
                       <div class="notification has-background-grey-darker has-text-light is-small">
                         <p class="is-size-7 has-text-grey-light mb-1">

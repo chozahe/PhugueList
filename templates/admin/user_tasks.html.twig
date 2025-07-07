@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Задачи пользователя {{ user.email }}{% endblock %}
+{% block title %}Задачи пользователя {{ user.username }}{% endblock %}
 
 {% block body %}
 <section class="section">
@@ -8,7 +8,7 @@
     <nav class="breadcrumb has-bullet-separator" aria-label="breadcrumbs">
       <ul>
         <li><a href="{{ path('admin_users') }}" class="has-text-primary">Пользователи</a></li>
-        <li class="is-active"><a href="#" class="has-text-light">Задачи {{ user.email }}</a></li>
+        <li class="is-active"><a href="#" class="has-text-light">Задачи {{ user.username }}</a></li>
       </ul>
     </nav>
 
@@ -17,7 +17,7 @@
         <span class="icon has-text-primary">
           <i class="fas fa-tasks"></i>
         </span>
-        <span>Задачи пользователя: {{ user.email }}</span>
+        <span>Задачи пользователя: {{ user.username }}</span>
       </span>
     </h1>
 
@@ -41,7 +41,7 @@
               <span class="icon">
                 <i class="fas fa-user"></i>
               </span>
-              <span>{{ user.email }}</span>
+              <span>{{ user.username }}</span>
             </span>
           </div>
         </div>
@@ -159,7 +159,7 @@
                 <span>Нет задач</span>
               </span>
             </p>
-            <p class="subtitle is-6 has-text-grey-light">У пользователя {{ user.email }} пока нет задач</p>
+            <p class="subtitle is-6 has-text-grey-light">У пользователя {{ user.username }} пока нет задач</p>
           </div>
         </div>
       </div>

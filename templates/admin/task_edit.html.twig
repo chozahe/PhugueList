@@ -8,7 +8,7 @@
     <nav class="breadcrumb has-bullet-separator" aria-label="breadcrumbs">
       <ul>
         <li><a href="{{ path('admin_users') }}" class="has-text-primary">Пользователи</a></li>
-        <li><a href="{{ path('admin_user_tasks', {'userId': user.id}) }}" class="has-text-primary">Задачи {{ user.email }}</a></li>
+        <li><a href="{{ path('admin_user_tasks', {'userId': user.id}) }}" class="has-text-primary">Задачи {{ user.username }}</a></li>
         <li class="is-active"><a href="#" class="has-text-light">Редактирование задачи</a></li>
       </ul>
     </nav>
@@ -18,7 +18,7 @@
         <span class="icon has-text-primary">
           <i class="fas fa-edit"></i>
         </span>
-        <span>Редактировать задачу пользователя {{ user.email }}</span>
+        <span>Редактировать задачу пользователя {{ user.username }}</span>
       </span>
     </h1>
 
@@ -58,7 +58,7 @@
                       <span class="has-text-weight-semibold">Владелец:</span>
                     </span>
                   </p>
-                  <p class="has-text-weight-medium has-text-light">{{ user.email }}</p>
+                  <p class="has-text-weight-medium has-text-light">{{ user.username }}</p>
                 </div>
               </div>
               <div class="column">
@@ -150,37 +150,4 @@
     </div>
   </div>
 </section>
-{% endblock %}': 'form-label'}}) }}
-                        {{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
-                        {{ form_errors(form.name) }}
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.description, 'Описание', {'label_attr': {'class': 'form-label'}}) }}
-                        {{ form_widget(form.description, {'attr': {'class': 'form-control', 'rows': 4}}) }}
-                        {{ form_errors(form.description) }}
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.deadline, 'Дедлайн', {'label_attr': {'class': 'form-label'}}) }}
-                        {{ form_widget(form.deadline, {'attr': {'class': 'form-control'}}) }}
-                        {{ form_errors(form.deadline) }}
-                    </div>
-
-                    <div class="d-flex gap-2">
-                        <button type="submit" class="btn btn-primary">
-                            Сохранить изменения
-                        </button>
-                        <a href="{{ path('admin_user_tasks', {'userId': user.id}) }}"
-                           class="btn btn-secondary">
-                            Отмена
-                        </a>
-                    </div>
-
-                    {{ form_end(form) }}
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 {% endblock %}
