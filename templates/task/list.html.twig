@@ -1,0 +1,196 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ваши задачи{% endblock %}
+
+{% block body %}
+<section class="section">
+  <div class="container">
+    <h1 class="title has-text-light">Мои задачи</h1>
+    <div class="box has-background-grey-darker">
+      <h2 class="subtitle has-text-centered mb-4 has-text-light">
+        <span class="icon-text">
+          <span class="icon has-text-primary">
+            <i class="fas fa-filter"></i>
+          </span>
+          <span>Фильтры</span>
+        </span>
+      </h2>
+      {{ form_start(filterForm, {'attr': {'class': 'mb-4'}}) }}
+      <div class="columns is-multiline is-variable is-4">
+        <div class="column is-one-quarter">
+          <div class="field">
+            {{ form_label(filterForm.status, 'Статус', {'label_attr': {'class': 'label is-small has-text-weight-semibold has-text-light'}}) }}
+            <div class="control has-icons-left">
+              {{ form_widget(filterForm.status, {'attr': {'class': 'select is-fullwidth has-background-grey-dark has-text-light'}}) }}
+              <span class="icon is-small is-left has-text-primary">
+                <i class="fas fa-tasks"></i>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="column is-one-quarter">
+          <div class="field">
+            {{ form_label(filterForm.fromDate, 'Срок от', {'label_attr': {'class': 'label is-small has-text-weight-semibold has-text-light'}}) }}
+            <div class="control has-icons-left">
+              {{ form_widget(filterForm.fromDate, {'attr': {'class': 'input is-rounded has-background-grey-dark has-text-light'}}) }}
+              <span class="icon is-small is-left has-text-primary">
+                <i class="fas fa-calendar-alt"></i>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="column is-one-quarter">
+          <div class="field">
+            {{ form_label(filterForm.toDate, 'Срок до', {'label_attr': {'class': 'label is-small has-text-weight-semibold has-text-light'}}) }}
+            <div class="control has-icons-left">
+              {{ form_widget(filterForm.toDate, {'attr': {'class': 'input is-rounded has-background-grey-dark has-text-light'}}) }}
+              <span class="icon is-small is-left has-text-primary">
+                <i class="fas fa-calendar-alt"></i>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="column is-one-quarter">
+          <div class="field">
+            <label class="label is-small has-text-weight-semibold has-text-light"> </label>
+            <div class="control">
+              <label class="checkbox has-text-light">
+                {{ form_widget(filterForm.onlyOverdue) }}
+                <span class="has-text-weight-medium">Только просроченные</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="field is-grouped is-grouped-centered">
+        <div class="control">
+          <button class="button is-primary is-rounded has-text-weight-medium" type="submit">
+            <span class="icon">
+              <i class="fas fa-search"></i>
+            </span>
+            <span>Фильтровать</span>
+          </button>
+        </div>
+      </div>
+      {{ form_end(filterForm) }}
+    </div>
+
+    {% if tasks is not empty %}
+      <div class="columns is-multiline is-variable is-4">
+        {% for task in tasks %}
+          <div class="column is-one-third">
+            <div class="card has-background-grey-dark has-text-light" style="height: 100%; display: flex; flex-direction: column; cursor: pointer;" onclick="window.location='{{ path('task_edit', {'id': task.id}) }}'">
+              <div class="card-header has-background-grey-darker">
+                <p class="card-header-title has-text-light is-size-5">
+                  <span class="icon-text">
+                    <span class="icon has-text-primary">
+                      <i class="fas fa-clipboard-check"></i>
+                    </span>
+                    <span>{{ task.name }}</span>
+                  </span>
+                </p>
+                <div class="card-header-icon">
+                  {% if task.deadline < date() and task.status != constant('App\\Enum\\TaskStatus::COMPLETED') %}
+                    <form action="{{ path('task_change_status', {'id': task.id}) }}" method="post" style="display: inline;">
+                      <button type="submit" class="tag is-danger is-medium">
+                        <span class="icon">
+                          <i class="fas fa-exclamation-triangle"></i>
+                        </span>
+                        <span>Просрочена</span>
+                      </button>
+                    </form>
+                  {% else %}
+                    {% set status = {
+                      'new': 'Новая',
+                      'in_progress': 'В работе',
+                      'completed': 'Выполнена'
+                    }[task.status.value] %}
+                    <form action="{{ path('task_change_status', {'id': task.id}) }}" method="post" style="display: inline;">
+                      <button type="submit" class="tag is-{{ task.status.value == 'completed' ? 'success' : 'info' }} is-medium">
+                        {% if task.status.value == 'completed' %}
+                          <span class="icon">
+                            <i class="fas fa-check"></i>
+                          </span>
+                        {% elseif task.status.value == 'in_progress' %}
+                          <span class="icon">
+                            <i class="fas fa-spinner"></i>
+                          </span>
+                        {% else %}
+                          <span class="icon">
+                            <i class="fas fa-plus"></i>
+                          </span>
+                        {% endif %}
+                        <span>{{ status }}</span>
+                      </button>
+                    </form>
+                  {% endif %}
+                </div>
+              </div>
+              <div class="card-content" style="flex-grow: 1;">
+                <div class="content">
+                  <div class="box has-background-grey-darker has-text-light mb-4">
+                    <p class="has-text-weight-medium has-text-grey-light mb-2">
+                      <span class="icon-text">
+                        <span class="icon is-small has-text-primary">
+                          <i class="fas fa-align-left"></i>
+                        </span>
+                        <span>Описание:</span>
+                      </span>
+                    </p>
+                    <p class="has-text-light">{{ task.description }}</p>
+                  </div>
+
+                  <div class="columns is-mobile is-gapless">
+                    <div class="column">
+                      <div class="notification has-background-grey-darker has-text-light is-small">
+                        <p class="is-size-7 has-text-grey-light mb-1">
+                          <span class="icon-text">
+                            <span class="icon is-small has-text-warning">
+                              <i class="fas fa-clock"></i>
+                            </span>
+                            <span class="has-text-weight-semibold">Срок:</span>
+                          </span>
+                        </p>
+                        <p class="has-text-weight-medium has-text-light">{{ task.deadline|date('Y-m-d H:i') }}</p>
+                      </div>
+                    </div>
+                    <div class="column">
+                      <div class="notification has-background-grey-darker has-text-light is-small">
+                        <p class="is-size-7 your-text-grey-light mb-1">
+                          <span class="icon-text">
+                            <span class="icon is-small has-text-info">
+                              <i class="fas fa-calendar-plus"></i>
+                            </span>
+                            <span class="has-text-weight-semibold">Создано:</span>
+                          </span>
+                        </p>
+                        <p class="has-text-weight-medium has-text-light">{{ task.createdAt|date('Y-m-d H:i') }}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="hero has-background-grey-darker">
+        <div class="hero-body">
+          <div class="container has-text-centered">
+            <p class="title is-4 has-text-grey-light">
+              <span class="icon-text">
+                <span class="icon is-large has-text-primary">
+                  <i class="fas fa-inbox"></i>
+                </span>
+                <span>Нет задач</span>
+              </span>
+            </p>
+            <p class="subtitle is-6 has-text-grey-light">Пока что задач не найдено</p>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Редактировать задачу{% endblock %}
+
+{% block body %}
+<section class="section">
+  <div class="container">
+    <h1 class="title has-text-light">Редактировать задачу: {{ task.name }}</h1>
+    <div class="box has-background-grey-darker">
+      {{ form_start(form, {'attr': {'class': 'mb-4'}}) }}
+      <div class="field">
+        {{ form_label(form.name, 'Название', {'label_attr': {'class': 'label has-text-weight-semibold has-text-light'}}) }}
+        <div class="control has-icons-left">
+          {{ form_widget(form.name, {'attr': {'class': 'input is-rounded has-background-grey-dark has-text-light'}}) }}
+          <span class="icon is-small is-left has-text-primary">
+            <i class="fas fa-clipboard-check"></i>
+          </span>
+        </div>
+      </div>
+
+      <div class="field">
+        {{ form_label(form.description, 'Описание', {'label_attr': {'class': 'label has-text-weight-semibold has-text-light'}}) }}
+        <div class="control has-icons-left">
+          {{ form_widget(form.description, {'attr': {'class': 'textarea has-background-grey-dark has-text-light'}}) }}
+          <span class="icon is-small is-left has-text-primary">
+            <i class="fas fa-align-left"></i>
+          </span>
+        </div>
+      </div>
+
+      <div class="field">
+        {{ form_label(form.deadline, 'Срок', {'label_attr': {'class': 'label has-text-weight-semibold has-text-light'}}) }}
+        <div class="control has-icons-left">
+          {{ form_widget(form.deadline, {'attr': {'class': 'input is-rounded has-background-grey-dark has-text-light'}}) }}
+          <span class="icon is-small is-left has-text-primary">
+            <i class="fas fa-calendar-alt"></i>
+          </span>
+        </div>
+      </div>
+
+      <div class="field is-grouped is-grouped-centered">
+        <div class="control">
+          <button class="button is-primary is-rounded has-text-weight-medium" type="submit">
+            <span class="icon">
+              <i class="fas fa-save"></i>
+            </span>
+            <span>Сохранить</span>
+          </button>
+        </div>
+        <div class="control">
+          <a href="{{ path('task_list') }}" class="button is-light is-rounded has-text-weight-medium">
+            <span class="icon">
+              <i class="fas fa-arrow-left"></i>
+            </span>
+            <span>Отмена</span>
+          </a>
+        </div>
+      </div>
+      {{ form_end(form) }}
+    </div>
+  </div>
+</section>
+{% endblock %}

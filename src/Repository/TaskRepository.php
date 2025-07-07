@@ -5,6 +5,9 @@ namespace App\Repository;
 use App\Entity\Task;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use App\Entity\User;
+use App\Dto\TaskFilterDto;
+use App\Enum\TaskStatus;
 
 /**
  * @extends ServiceEntityRepository<Task>
@@ -16,28 +19,38 @@ class TaskRepository extends ServiceEntityRepository
         parent::__construct($registry, Task::class);
     }
 
-//    /**
-//     * @return Task[] Returns an array of Task objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('t')
-//            ->andWhere('t.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('t.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function findFilteredTasksForUser(User $user, TaskFilterDto $filter): array
+    {
+        $qb = $this->createQueryBuilder('t')
+            ->where('t.owner = :user')
+            ->setParameter('user', $user);
 
-//    public function findOneBySomeField($value): ?Task
-//    {
-//        return $this->createQueryBuilder('t')
-//            ->andWhere('t.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        if ($filter->status !== null) {
+            $qb->andWhere('t.status = :status')
+                ->setParameter('status', $filter->status);
+        }
+
+        if ($filter->fromDate !== null) {
+            $qb->andWhere('t.deadline >= :fromDate')
+                ->setParameter('fromDate', $filter->fromDate);
+        }
+
+        if ($filter->toDate !== null) {
+            $qb->andWhere('t.deadline <= :toDate')
+                ->setParameter('toDate', $filter->toDate);
+        }
+
+        if ($filter->onlyOverdue) {
+            $now = new \DateTimeImmutable();
+            $qb->andWhere('t.deadline < :now')
+                ->andWhere('t.status != :completed')
+                ->setParameter('now', $now)
+                ->setParameter('completed', TaskStatus::COMPLETED);
+        }
+
+        return $qb
+            ->orderBy('t.deadline', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 }
