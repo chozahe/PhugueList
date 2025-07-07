@@ -1,0 +1,169 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Задачи пользователя {{ user.email }}{% endblock %}
+
+{% block body %}
+<section class="section">
+  <div class="container">
+    <nav class="breadcrumb has-bullet-separator" aria-label="breadcrumbs">
+      <ul>
+        <li><a href="{{ path('admin_users') }}" class="has-text-primary">Пользователи</a></li>
+        <li class="is-active"><a href="#" class="has-text-light">Задачи {{ user.email }}</a></li>
+      </ul>
+    </nav>
+
+    <h1 class="title has-text-light">
+      <span class="icon-text">
+        <span class="icon has-text-primary">
+          <i class="fas fa-tasks"></i>
+        </span>
+        <span>Задачи пользователя: {{ user.email }}</span>
+      </span>
+    </h1>
+
+    <div class="box has-background-grey-darker mb-4">
+      <div class="level">
+        <div class="level-left">
+          <div class="level-item">
+            <p class="subtitle has-text-light">
+              <span class="icon-text">
+                <span class="icon has-text-info">
+                  <i class="fas fa-info-circle"></i>
+                </span>
+                <span>Всего задач: {{ tasks|length }}</span>
+              </span>
+            </p>
+          </div>
+        </div>
+        <div class="level-right">
+          <div class="level-item">
+            <span class="tag is-primary is-medium">
+              <span class="icon">
+                <i class="fas fa-user"></i>
+              </span>
+              <span>{{ user.email }}</span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% if tasks %}
+      <div class="columns is-multiline is-variable is-4">
+        {% for task in tasks %}
+          <div class="column is-one-third">
+            <div class="card has-background-grey-dark has-text-light" style="height: 100%; display: flex; flex-direction: column; cursor: pointer;" onclick="window.location='{{ path('admin_task_edit', {'userId': user.id, 'taskId': task.id}) }}'">
+              <div class="card-header has-background-grey-darker">
+                <p class="card-header-title has-text-light is-size-5">
+                  <span class="icon-text">
+                    <span class="icon has-text-primary">
+                      <i class="fas fa-clipboard-check"></i>
+                    </span>
+                    <span>{{ task.name }}</span>
+                  </span>
+                </p>
+                <div class="card-header-icon">
+                  {% if task.deadline < date() and task.status != constant('App\\Enum\\TaskStatus::COMPLETED') %}
+                    <form action="{{ path('admin_task_change_status', {'userId': user.id, 'taskId': task.id}) }}" method="post" style="display: inline;">
+                      <button type="submit" class="tag is-danger is-medium">
+                        <span class="icon">
+                          <i class="fas fa-exclamation-triangle"></i>
+                        </span>
+                        <span>Просрочена</span>
+                      </button>
+                    </form>
+                  {% else %}
+                    {% set status = {
+                      'new': 'Новая',
+                      'in_progress': 'В работе',
+                      'completed': 'Выполнена'
+                    }[task.status.value] %}
+                    <form action="{{ path('admin_task_change_status', {'userId': user.id, 'taskId': task.id}) }}" method="post" style="display: inline;">
+                      <button type="submit" class="tag is-{{ task.status.value == 'completed' ? 'success' : 'info' }} is-medium">
+                        {% if task.status.value == 'completed' %}
+                          <span class="icon">
+                            <i class="fas fa-check"></i>
+                          </span>
+                        {% elseif task.status.value == 'in_progress' %}
+                          <span class="icon">
+                            <i class="fas fa-spinner"></i>
+                          </span>
+                        {% else %}
+                          <span class="icon">
+                            <i class="fas fa-plus"></i>
+                          </span>
+                        {% endif %}
+                        <span>{{ status }}</span>
+                      </button>
+                    </form>
+                  {% endif %}
+                </div>
+              </div>
+              <div class="card-content" style="flex-grow: 1;">
+                <div class="content">
+                  <div class="box has-background-grey-darker has-text-light mb-4">
+                    <p class="has-text-weight-medium has-text-grey-light mb-2">
+                      <span class="icon-text">
+                        <span class="icon is-small has-text-primary">
+                          <i class="fas fa-align-left"></i>
+                        </span>
+                        <span>Описание:</span>
+                      </span>
+                    </p>
+                    <p class="has-text-light">{{ task.description }}</p>
+                  </div>
+
+                  <div class="columns is-mobile is-gapless">
+                    <div class="column">
+                      <div class="notification has-background-grey-darker has-text-light is-small">
+                        <p class="is-size-7 has-text-grey-light mb-1">
+                          <span class="icon-text">
+                            <span class="icon is-small has-text-warning">
+                              <i class="fas fa-clock"></i>
+                            </span>
+                            <span class="has-text-weight-semibold">Срок:</span>
+                          </span>
+                        </p>
+                        <p class="has-text-weight-medium has-text-light">{{ task.deadline|date('Y-m-d H:i') }}</p>
+                      </div>
+                    </div>
+                    <div class="column">
+                      <div class="notification has-background-grey-darker has-text-light is-small">
+                        <p class="is-size-7 has-text-grey-light mb-1">
+                          <span class="icon-text">
+                            <span class="icon is-small has-text-info">
+                              <i class="fas fa-calendar-plus"></i>
+                            </span>
+                            <span class="has-text-weight-semibold">Создано:</span>
+                          </span>
+                        </p>
+                        <p class="has-text-weight-medium has-text-light">{{ task.createdAt|date('Y-m-d H:i') }}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="hero has-background-grey-darker">
+        <div class="hero-body">
+          <div class="container has-text-centered">
+            <p class="title is-4 has-text-grey-light">
+              <span class="icon-text">
+                <span class="icon is-large has-text-primary">
+                  <i class="fas fa-inbox"></i>
+                </span>
+                <span>Нет задач</span>
+              </span>
+            </p>
+            <p class="subtitle is-6 has-text-grey-light">У пользователя {{ user.email }} пока нет задач</p>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

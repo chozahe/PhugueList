@@ -71,6 +71,11 @@ class TaskService
         return $this->taskRepository->findFilteredTasksForUser($user, $filter);
     }
 
+    public function getAllTasksForUser(User $user): array
+    {
+        return $this->taskRepository->findBy(['owner' => $user]);
+    }
+
     public function getTaskById(int $id): ?Task
     {
         return $this->taskRepository->find($id);

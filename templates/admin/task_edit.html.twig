@@ -1,0 +1,186 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Редактировать задачу{% endblock %}
+
+{% block body %}
+<section class="section">
+  <div class="container">
+    <nav class="breadcrumb has-bullet-separator" aria-label="breadcrumbs">
+      <ul>
+        <li><a href="{{ path('admin_users') }}" class="has-text-primary">Пользователи</a></li>
+        <li><a href="{{ path('admin_user_tasks', {'userId': user.id}) }}" class="has-text-primary">Задачи {{ user.email }}</a></li>
+        <li class="is-active"><a href="#" class="has-text-light">Редактирование задачи</a></li>
+      </ul>
+    </nav>
+
+    <h1 class="title has-text-light">
+      <span class="icon-text">
+        <span class="icon has-text-primary">
+          <i class="fas fa-edit"></i>
+        </span>
+        <span>Редактировать задачу пользователя {{ user.email }}</span>
+      </span>
+    </h1>
+
+    <div class="box has-background-grey-darker mb-4">
+      <div class="columns">
+        <div class="column">
+          <div class="content has-text-light">
+            <p class="has-text-weight-medium has-text-grey-light mb-2">
+              <span class="icon-text">
+                <span class="icon is-small has-text-primary">
+                  <i class="fas fa-info-circle"></i>
+                </span>
+                <span>Информация о задаче:</span>
+              </span>
+            </p>
+            <div class="columns is-mobile">
+              <div class="column">
+                <div class="notification has-background-grey-dark has-text-light is-small">
+                  <p class="is-size-7 has-text-grey-light mb-1">
+                    <span class="icon-text">
+                      <span class="icon is-small has-text-info">
+                        <i class="fas fa-hashtag"></i>
+                      </span>
+                      <span class="has-text-weight-semibold">ID задачи:</span>
+                    </span>
+                  </p>
+                  <p class="has-text-weight-medium has-text-light">{{ task.id }}</p>
+                </div>
+              </div>
+              <div class="column">
+                <div class="notification has-background-grey-dark has-text-light is-small">
+                  <p class="is-size-7 has-text-grey-light mb-1">
+                    <span class="icon-text">
+                      <span class="icon is-small has-text-warning">
+                        <i class="fas fa-user"></i>
+                      </span>
+                      <span class="has-text-weight-semibold">Владелец:</span>
+                    </span>
+                  </p>
+                  <p class="has-text-weight-medium has-text-light">{{ user.email }}</p>
+                </div>
+              </div>
+              <div class="column">
+                <div class="notification has-background-grey-dark has-text-light is-small">
+                  <p class="is-size-7 has-text-grey-light mb-1">
+                    <span class="icon-text">
+                      <span class="icon is-small has-text-success">
+                        <i class="fas fa-tasks"></i>
+                      </span>
+                      <span class="has-text-weight-semibold">Статус:</span>
+                    </span>
+                  </p>
+                  {% set status = {
+                    'new': 'Новая',
+                    'in_progress': 'В работе',
+                    'completed': 'Выполнена'
+                  }[task.status.value] %}
+                  <span class="tag is-{{ task.status.value == 'completed' ? 'success' : 'info' }} is-small">
+                    {{ status }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="box has-background-grey-darker">
+      <h2 class="subtitle has-text-light mb-4">
+        <span class="icon-text">
+          <span class="icon has-text-primary">
+            <i class="fas fa-edit"></i>
+          </span>
+          <span>Редактирование задачи</span>
+        </span>
+      </h2>
+
+      {{ form_start(form, {'attr': {'class': 'mb-4'}}) }}
+      <div class="field">
+        {{ form_label(form.name, 'Название', {'label_attr': {'class': 'label has-text-weight-semibold has-text-light'}}) }}
+        <div class="control has-icons-left">
+          {{ form_widget(form.name, {'attr': {'class': 'input is-rounded has-background-grey-dark has-text-light'}}) }}
+          <span class="icon is-small is-left has-text-primary">
+            <i class="fas fa-clipboard-check"></i>
+          </span>
+        </div>
+      </div>
+
+      <div class="field">
+        {{ form_label(form.description, 'Описание', {'label_attr': {'class': 'label has-text-weight-semibold has-text-light'}}) }}
+        <div class="control has-icons-left">
+          {{ form_widget(form.description, {'attr': {'class': 'textarea has-background-grey-dark has-text-light'}}) }}
+          <span class="icon is-small is-left has-text-primary">
+            <i class="fas fa-align-left"></i>
+          </span>
+        </div>
+      </div>
+
+      <div class="field">
+        {{ form_label(form.deadline, 'Срок', {'label_attr': {'class': 'label has-text-weight-semibold has-text-light'}}) }}
+        <div class="control has-icons-left">
+          {{ form_widget(form.deadline, {'attr': {'class': 'input is-rounded has-background-grey-dark has-text-light'}}) }}
+          <span class="icon is-small is-left has-text-primary">
+            <i class="fas fa-calendar-alt"></i>
+          </span>
+        </div>
+      </div>
+
+      <div class="field is-grouped is-grouped-centered">
+        <div class="control">
+          <button class="button is-primary is-rounded has-text-weight-medium" type="submit">
+            <span class="icon">
+              <i class="fas fa-save"></i>
+            </span>
+            <span>Сохранить изменения</span>
+          </button>
+        </div>
+        <div class="control">
+          <a href="{{ path('admin_user_tasks', {'userId': user.id}) }}" class="button is-light is-rounded has-text-weight-medium">
+            <span class="icon">
+              <i class="fas fa-arrow-left"></i>
+            </span>
+            <span>Отмена</span>
+          </a>
+        </div>
+      </div>
+      {{ form_end(form) }}
+    </div>
+  </div>
+</section>
+{% endblock %}': 'form-label'}}) }}
+                        {{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(form.name) }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.description, 'Описание', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.description, {'attr': {'class': 'form-control', 'rows': 4}}) }}
+                        {{ form_errors(form.description) }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.deadline, 'Дедлайн', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.deadline, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(form.deadline) }}
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            Сохранить изменения
+                        </button>
+                        <a href="{{ path('admin_user_tasks', {'userId': user.id}) }}"
+                           class="btn btn-secondary">
+                            Отмена
+                        </a>
+                    </div>
+
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

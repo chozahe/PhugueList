@@ -1,0 +1,116 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Управление пользователями{% endblock %}
+
+{% block body %}
+<section class="section">
+  <div class="container">
+    <h1 class="title has-text-light">
+      <span class="icon-text">
+        <span class="icon has-text-primary">
+          <i class="fas fa-users-cog"></i>
+        </span>
+        <span>Управление пользователями</span>
+      </span>
+    </h1>
+
+    {% if users %}
+      <div class="columns is-multiline is-variable is-4">
+        {% for user in users %}
+          <div class="column is-one-third">
+            <div class="card has-background-grey-dark has-text-light" style="height: 100%; display: flex; flex-direction: column; cursor: pointer;" onclick="window.location='{{ path('admin_user_tasks', {'userId': user.id}) }}'">
+              <div class="card-header has-background-grey-darker">
+                <p class="card-header-title has-text-light is-size-5">
+                  <span class="icon-text">
+                    <span class="icon has-text-primary">
+                      <i class="fas fa-user"></i>
+                    </span>
+                    <span>{{ user.email }}</span>
+                  </span>
+                </p>
+                <div class="card-header-icon">
+                  {% for role in user.roles %}
+                    <span class="tag is-{{ role == 'ROLE_ADMIN' ? 'danger' : 'info' }} is-medium">
+                      <span class="icon">
+                        <i class="fas fa-{{ role == 'ROLE_ADMIN' ? 'crown' : 'user' }}"></i>
+                      </span>
+                      <span>{{ role == 'ROLE_ADMIN' ? 'Админ' : 'Пользователь' }}</span>
+                    </span>
+                  {% endfor %}
+                </div>
+              </div>
+              <div class="card-content" style="flex-grow: 1;">
+                <div class="content">
+                  <div class="box has-background-grey-darker has-text-light mb-4">
+                    <p class="has-text-weight-medium has-text-grey-light mb-2">
+                      <span class="icon-text">
+                        <span class="icon is-small has-text-primary">
+                          <i class="fas fa-info-circle"></i>
+                        </span>
+                        <span>Информация:</span>
+                      </span>
+                    </p>
+                    <p class="has-text-light">ID: {{ user.id }}</p>
+                    <p class="has-text-light">Email: {{ user.email }}</p>
+                  </div>
+
+                  <div class="columns is-mobile is-gapless">
+                    <div class="column">
+                      <div class="notification has-background-grey-darker has-text-light is-small">
+                        <p class="is-size-7 has-text-grey-light mb-1">
+                          <span class="icon-text">
+                            <span class="icon is-small has-text-info">
+                              <i class="fas fa-calendar-plus"></i>
+                            </span>
+                            <span class="has-text-weight-semibold">Регистрация:</span>
+                          </span>
+                        </p>
+                        <p class="has-text-weight-medium has-text-light">
+                          {% if user.createdAt %}
+                            {{ user.createdAt|date('Y-m-d H:i') }}
+                          {% else %}
+                            Не указано
+                          {% endif %}
+                        </p>
+                      </div>
+                    </div>
+                    <div class="column">
+                      <div class="notification has-background-grey-darker has-text-light is-small">
+                        <p class="is-size-7 has-text-grey-light mb-1">
+                          <span class="icon-text">
+                            <span class="icon is-small has-text-warning">
+                              <i class="fas fa-tasks"></i>
+                            </span>
+                            <span class="has-text-weight-semibold">Действие:</span>
+                          </span>
+                        </p>
+                        <p class="has-text-weight-medium has-text-light">Просмотреть задачи</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="hero has-background-grey-darker">
+        <div class="hero-body">
+          <div class="container has-text-centered">
+            <p class="title is-4 has-text-grey-light">
+              <span class="icon-text">
+                <span class="icon is-large has-text-primary">
+                  <i class="fas fa-user-slash"></i>
+                </span>
+                <span>Нет пользователей</span>
+              </span>
+            </p>
+            <p class="subtitle is-6 has-text-grey-light">Пользователи не найдены</p>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}
